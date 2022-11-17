@@ -1,6 +1,6 @@
 import argparse
 from pathlib import Path
-from painsFilter import painsFilter
+from painsFilter import PainsFilter
 
 
 if __name__ == "__main__":
