@@ -1,5 +1,5 @@
 import argparse
-from painsFilter import PainsFilter
+from painsFilter import painsFilter
 
 
 if __name__ == "__main__":
@@ -13,6 +13,6 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     pains = PainsFilter()
-    
+
     if args.subcmd == "fliter_pains":
         pains.filter_by_pains(input_smiles_path, output_smiles_path)
