@@ -87,7 +87,7 @@ class PainsFilter(object):
         else:
             suppl = Chem.SDMolSupplier(str(query_path))
         _cpd_without_pains_dict={}
-        print (len(suppl))
+        print (f"Total number of query cpds for PAINS filter: {len(suppl)}")
         for index, mol in enumerate(suppl):
             if mol:
                 mol_addH = Chem.AddHs(mol) #Add hydrogen
