@@ -99,6 +99,7 @@ class PainsFilter(object):
             for _cpd_name, _cpd_smiles in _cpd_without_pains_dict.items():
                 output.write(f"{_cpd_smiles.strip()}\t{_cpd_name.strip()}\n")
 
+'''
 if __name__ == "__main__":
     work_dir = Path("/home/justin/Vichem_paper/kinase_group/data/for_cpd_diversity_new")
     lib_sheet_df = pd.read_csv(PurePath(work_dir, Path("library_sheet.csv")), sep="\t", header=0)
@@ -112,3 +113,4 @@ if __name__ == "__main__":
         pains.filter_by_pains(input_smiles_path, output_smiles_path)
         #pains.filter_by_pains(  Path("/home/justin/Vichem_paper/kinase_group/data/for_cpd_diversity_new/APExBIO_DiscoveryProbe_Kinase_Inhibitor_Library/standardised_smiles_APExBIO-Ki_withoutReplicates.smi"),
         #                        Path("/home/justin/Vichem_paper/kinase_group/data/for_cpd_diversity_new/APExBIO_DiscoveryProbe_Kinase_Inhibitor_Library/standardised_smiles_APExBIO-Ki_withoutReplicates_withoutPAINS.smi"))
+'''
