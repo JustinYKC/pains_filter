@@ -1,8 +1,7 @@
 from rdkit import Chem
-from rdkit.Chem import AllChem
-from pathlib import Path, PurePath
-import pandas as pd
+from pathlib import Path
 import sys
+import argparse
 
 class PainsFilter(object):
     """
@@ -99,18 +98,17 @@ class PainsFilter(object):
             for _cpd_name, _cpd_smiles in _cpd_without_pains_dict.items():
                 output.write(f"{_cpd_smiles.strip()}\t{_cpd_name.strip()}\n")
 
-'''
 if __name__ == "__main__":
-    work_dir = Path("/home/justin/Vichem_paper/kinase_group/data/for_cpd_diversity_new")
-    lib_sheet_df = pd.read_csv(PurePath(work_dir, Path("library_sheet.csv")), sep="\t", header=0)
-    print (lib_sheet_df)
-    for index, row in lib_sheet_df.iterrows():
-        dir_name = row["Name"] 
-        abbra_name = row["Abbreviation"]
-        input_smiles_path = PurePath(work_dir, Path(dir_name), Path(f"standardised_smiles_{abbra_name}_withoutReplicates.smi"))
-        output_smiles_path = PurePath(work_dir, Path(dir_name), Path(f"standardised_smiles_{abbra_name}_withoutReplicates_withoutPAINS.smi"))
-        pains = PainsFilter()
-        pains.filter_by_pains(input_smiles_path, output_smiles_path)
-        #pains.filter_by_pains(  Path("/home/justin/Vichem_paper/kinase_group/data/for_cpd_diversity_new/APExBIO_DiscoveryProbe_Kinase_Inhibitor_Library/standardised_smiles_APExBIO-Ki_withoutReplicates.smi"),
-        #                        Path("/home/justin/Vichem_paper/kinase_group/data/for_cpd_diversity_new/APExBIO_DiscoveryProbe_Kinase_Inhibitor_Library/standardised_smiles_APExBIO-Ki_withoutReplicates_withoutPAINS.smi"))
-'''
+    parser = argparse.ArgumentParser(description="Filter molecules with PAINS")
+    subparsers = parser.add_subparsers(dest= 'subcmd', help='subcommands', metavar='SUBCOMMAND')
+    subparsers.required = True
+
+    parser_f1 = subparsers.add_parser("fliter_pains", help="Apply PAINS filter to query compounds")
+    parser_f1.add_argument("-q_mol", "--query_file", help="The path of the input file that contains query compounds to be performed with PAINS filter", dest= "infile", required=True)
+    parser_f1.add_argument("-out", "--output_file", help="The path of the output file that contains result of Non-PAINS compounds", dest= "outfile", required=True)
+    
+    args = parser.parse_args()
+    pains = PainsFilter()
+
+    if args.subcmd == "fliter_pains":
+        pains.filter_by_pains(Path(args.infile), Path(args.outfile))
