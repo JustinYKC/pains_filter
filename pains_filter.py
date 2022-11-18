@@ -19,7 +19,7 @@ class PainsFilter(object):
             pains_substructures_smart = _pains_substructure_smart.readlines()
             self._pains_substructure_list = [Chem.MolFromSmarts(k) for k in pains_substructures_smart]
         print (f"The number of substructure fliters for PAINS: {len(self._pains_substructure_list)}")
-    def _check_input(self, _query_path:Path):
+    def _check_input(self, query_path:Path):
         """
         A private function used to check the type of the file containing query compounds.
 
@@ -30,12 +30,12 @@ class PainsFilter(object):
 
  
         """ 
-        if _query_path.suffix == ".smi": return "smi"
-        elif _query_path.suffix == ".sdf": return "sdf"
+        if query_path.suffix == ".smi": return "smi"
+        elif query_path.suffix == ".sdf": return "sdf"
         else: 
             print ("The query file is invalid, please use the valid format in terms of 'SDF', or 'SMILES'")
             sys.exit(-1)
-    def _pains_filt(self, _mol:Chem, _sub_list:list):
+    def _pains_filt(self, mol:Chem, sub_list:list) -> bool:
         """
         A private function used to check whether a query compound contains PAINS substrucutes.
 
@@ -52,8 +52,8 @@ class PainsFilter(object):
         It returns True if any PAINS substructure found in a query compound, otherwise it returns False.
 
         """ 
-        for ss in _sub_list:
-            if _mol.HasSubstructMatch(ss):
+        for ss in sub_list:
+            if mol.HasSubstructMatch(ss):
                 print ("PAIN found")
                 return True
         return False
