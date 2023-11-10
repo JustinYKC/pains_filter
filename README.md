@@ -4,6 +4,7 @@ A small tool to screen given virtual chemical libraries by the PAINS filter base
 # Requirements
 pains_filter requires the following packages:
 - rdkit (>=2019.09.x.x)
+- tqdm
 
 # Usage
 ### Parameters
