@@ -18,7 +18,7 @@ class PainsFilter(object):
         with open("./pains.txt", 'r') as _pains_substructure_smart:
             pains_substructures_smart = _pains_substructure_smart.readlines()
             self._pains_substructure_list = [Chem.MolFromSmarts(k) for k in pains_substructures_smart]
-        print (f"The number of substructure fliters for PAINS: {len(self._pains_substructure_list)}")
+        print (f"Number of PAINS substructure filters found: {len(self._pains_substructure_list)}")
     def _check_input(self, query_path:Path):
         """
         A private function used to check the type of the file containing query compounds.
@@ -103,12 +103,12 @@ if __name__ == "__main__":
     subparsers = parser.add_subparsers(dest= 'subcmd', help='subcommands', metavar='SUBCOMMAND')
     subparsers.required = True
 
-    parser_f1 = subparsers.add_parser("fliter_pains", help="Apply PAINS filter to query compounds")
+    parser_f1 = subparsers.add_parser("filter_pains", help="Apply PAINS filter to query compounds")
     parser_f1.add_argument("-q_mol", "--query_file", help="The path of the input file that contains query compounds to be performed with PAINS filter", dest= "infile", required=True)
     parser_f1.add_argument("-out", "--output_file", help="The path of the output file that contains result of Non-PAINS compounds", dest= "outfile", required=True)
     
     args = parser.parse_args()
     pains = PainsFilter()
 
-    if args.subcmd == "fliter_pains":
+    if args.subcmd == "filter_pains":
         pains.filter_by_pains(Path(args.infile), Path(args.outfile))

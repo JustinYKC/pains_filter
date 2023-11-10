@@ -7,6 +7,7 @@ pains_filter requires the following packages:
 
 # Usage
 ### Parameters
-*   `fliter_pains` *(Required)* Apply PAINS filter to query compounds.
+*   `filter_pains` *(Required)* Apply PAINS filter to query compounds.
     *   `-q_mol, --query_file` *(Required)* The path of the input file that contains query compounds to be performed with PAINS filter.
     *   `-mod_file, --model_file` *(Required)* The path of the output file that contains result of Non-PAINS compounds.
+    
