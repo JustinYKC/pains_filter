@@ -19,7 +19,7 @@ class PainsFilter(object):
             pains_substructures_smart = _pains_substructure_smart.readlines()
             self._pains_substructure_list = [Chem.MolFromSmarts(k) for k in pains_substructures_smart]
         print (f"The number of substructure fliters for PAINS: {len(self._pains_substructure_list)}")
-    def _check_input(self, query_path:Path):
+    def _check_input(self, query_path:Path) -> str:
         """
         A private function used to check the type of the file containing query compounds.
 
