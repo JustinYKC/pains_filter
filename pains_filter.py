@@ -1,6 +1,5 @@
 from rdkit import Chem
 from pathlib import Path
-import sys
 import argparse
 from tqdm import tqdm
 
@@ -31,11 +30,12 @@ class PainsFilter(object):
 
  
         """ 
-        if query_path.suffix == ".smi": return "smi"
-        elif query_path.suffix == ".sdf": return "sdf"
+        if query_path.suffix == ".smi": 
+            return "smi"
+        elif query_path.suffix == ".sdf": 
+            return "sdf"
         else: 
-            print ("The query file is invalid, please use the valid format in terms of 'SDF', or 'SMILES'")
-            sys.exit(-1)
+            raise ValueError("The query file is invalid, please use the valid format in terms of '.sdf', or '.smi'")
     def _pains_filt(self, mol:Chem, sub_list:list) -> bool:
         """
         A private function used to check whether a query compound contains PAINS substrucutes.
