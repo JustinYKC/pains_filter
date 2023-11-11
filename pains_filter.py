@@ -2,6 +2,7 @@ from rdkit import Chem
 from pathlib import Path
 import sys
 import argparse
+from tqdm import tqdm
 
 class PainsFilter(object):
     """
@@ -54,7 +55,6 @@ class PainsFilter(object):
         """ 
         for ss in sub_list:
             if mol.HasSubstructMatch(ss):
-                print ("PAIN found")
                 return True
         return False
     def filter_by_pains(self, query_path:Path, result_path:Path, delimiter:str="\t", smiles_column:int=0, name_column:int=1):
@@ -86,29 +86,34 @@ class PainsFilter(object):
         else:
             suppl = Chem.SDMolSupplier(str(query_path))
         _cpd_without_pains_dict={}
+        n_pains_found=0
         print (f"Total number of query cpds for PAINS filter: {len(suppl)}")
-        for index, mol in enumerate(suppl):
-            if mol:
-                mol_addH = Chem.AddHs(mol) #Add hydrogen
-                if (self._pains_filt(mol_addH, self._pains_substructure_list) == False):
-                    _cpd_without_pains_dict[mol.GetProp("_Name")] = Chem.MolToSmiles(mol).strip()
-
-        print (f"Total number of cpds without PAINS: {len(_cpd_without_pains_dict)}")
         with open(str(result_path), 'w') as output:
-            for _cpd_name, _cpd_smiles in _cpd_without_pains_dict.items():
-                output.write(f"{_cpd_smiles.strip()}\t{_cpd_name.strip()}\n")
-
+            for mol in (pbar := tqdm(suppl, desc="Filtering pains", bar_format="{l_bar}{bar}{r_bar} PAINS found: {postfix} | Elapsed: {elapsed} | {rate_fmt}",postfix=n_pains_found,)):
+                if mol:
+                    mol_addH = Chem.AddHs(mol) #Add hydrogen
+                    if self._pains_filt(mol_addH, self._pains_substructure_list):
+                        n_pains_found+=1
+                        pbar.postfix=n_pains_found
+                        pbar.update()
+                    else:
+                        try:
+                            mol_title=mol.GetProp("_Name")
+                        except:
+                            mol_title=""
+                        output.write(f"{Chem.MolToSmiles(mol).strip()} {mol_title}\n")
+                        
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Filter molecules with PAINS")
     subparsers = parser.add_subparsers(dest= 'subcmd', help='subcommands', metavar='SUBCOMMAND')
     subparsers.required = True
 
-    parser_f1 = subparsers.add_parser("fliter_pains", help="Apply PAINS filter to query compounds")
+    parser_f1 = subparsers.add_parser("filter_pains", help="Apply PAINS filter to query compounds")
     parser_f1.add_argument("-q_mol", "--query_file", help="The path of the input file that contains query compounds to be performed with PAINS filter", dest= "infile", required=True)
     parser_f1.add_argument("-out", "--output_file", help="The path of the output file that contains result of Non-PAINS compounds", dest= "outfile", required=True)
     
     args = parser.parse_args()
     pains = PainsFilter()
 
-    if args.subcmd == "fliter_pains":
+    if args.subcmd == "filter_pains":
         pains.filter_by_pains(Path(args.infile), Path(args.outfile))
